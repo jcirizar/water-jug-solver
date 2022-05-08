@@ -52,12 +52,12 @@ ${chalk.cyan('Steps')}:`);
       const largeValue = jugState.jugs[1].value;
 
       if (index !== solution.length - 1) {
-        console.log(`  ${index + 1}- ${chalk.cyan(jugState.action.padEnd(15))}=> ${yellow('Small')}: ${yellow(smallValue)} ${green('Large')}: ${green(largeValue)}`);
+        console.log(`  ${(index + 1 + '-').padEnd(4)} ${chalk.cyan(jugState.action.padEnd(15))}=> ${yellow('Small')}: ${yellow(smallValue.toString().padEnd(3))} ${green('Large')}: ${green(largeValue)}`);
       } else {
         const highlight = chalk.bgGray.bold.blue;
         const smallColor = zGallon === smallValue ? highlight : (zGallon === smallValue + largeValue ? highlight : yellow);
         const largeColor = zGallon === largeValue ? highlight : (zGallon === smallValue + largeValue ? highlight : green);
-        console.log(`  ${index + 1}- ${chalk.cyan(jugState.action.padEnd(15))}=> ${yellow('Small')}: ${smallColor(smallValue)} ${green('Large')}: ${largeColor(largeValue)}`);
+        console.log(`  ${(index + 1 + '-').padEnd(4)} ${chalk.cyan(jugState.action.padEnd(15))}=> ${yellow('Small')}: ${smallColor(smallValue.toString().padEnd(3))} ${green('Large')}: ${largeColor(largeValue)}`);
       }
     });
   }
