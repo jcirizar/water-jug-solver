@@ -1,33 +1,11 @@
 import { NO_SOLUTION, STATE } from '../constants';
 import { dangerousDeepClone, isEven, isOdd } from '../utils';
-
-
-interface Jug {
-  value: number;
-  readonly capacity: number;
-  readonly name: 'small' | 'large';
-}
-
-interface JugState {
-  action: string;
-  simple: string;
-  jugs: [Jug, Jug];
-}
-
-interface Path {
-  stringList: string[];
-  states: JugState[];
-}
-
-interface NoPath {
-  stringList: typeof NO_SOLUTION;
-}
-
+import { Jug, JugState } from './interfaces';
 
 export class WaterJugSolver {
   queue: JugState[] = [];
   tree = new Map();
-  pathList: Path[] = [];
+  pathList: JugState[][] = [];
 
   constructor(readonly xGallon: number, readonly yGallon: number, readonly zGallon: number) {
     const [small, large] = [this.xGallon, this.yGallon].sort((a, b) => a - b);
@@ -42,10 +20,7 @@ export class WaterJugSolver {
     };
     this.queue.push(start);
     this.addNode(this.getUniqueStringOutOfState(start));
-    this.pathList.push({
-      states: [start],
-      stringList: [this.getUniqueStringOutOfState(start)]
-    });
+    this.pathList.push([start]);
   }
 
   addNode(value: string) {
@@ -110,33 +85,25 @@ export class WaterJugSolver {
 
   buildPathForState(parent: JugState, child: JugState) {
 
-    const parentString = this.getUniqueStringOutOfState(parent);
-    const childString = this.getUniqueStringOutOfState(child);
-    const found = this.pathList.find((path) => {
-      const lastIndex = path.stringList.at(-1);
-      return lastIndex === parentString;
+    const found = this.pathList.find((states) => {
+      const lastIndex = states.at(-1);
+      return (<JugState>lastIndex).simple === parent.simple;
     });
 
-
     if (found) {
-      (<Path>found).stringList.push(childString);
-      found.states.push(child);
+      found.push(child);
     } else {
-
-      const foundSecondFromLast = this.pathList.find((path) => {
-        const lastIndex = path.stringList.at(-2);
-        return lastIndex === parentString;
+      const foundSecondFromLast = this.pathList.find((states) => {
+        const secondFromLast = states.at(-2);
+        return (<JugState>secondFromLast).simple === parent.simple;
       });
+
       if (foundSecondFromLast) {
-        this.pathList.push({
-          states: [...foundSecondFromLast.states.slice(0, -1), child],
-          stringList: [...foundSecondFromLast.stringList.slice(0, -1), childString]
-        });
+        this.pathList.push(
+          [...foundSecondFromLast.slice(0, -1), child],
+        );
       } else {
-        this.pathList.push({
-          states: [parent, child],
-          stringList: [parentString, childString]
-        });
+        this.pathList.push([parent, child]);
       }
     }
   }
@@ -151,19 +118,15 @@ export class WaterJugSolver {
   }
 
 
-  solve(): Path | NoPath {
+  solve(): JugState[] | typeof NO_SOLUTION {
     // ZGallon can't be more water than the combined jugs.
     if (this.xGallon + this.yGallon < this.zGallon) {
-      return {
-        stringList: NO_SOLUTION
-      };
+      return NO_SOLUTION;
     }
 
     // If ZGallon is odd and jugs are even, is impossible.
     if (isEven(this.xGallon) && isEven(this.yGallon) && isOdd(this.zGallon)) {
-      return {
-        stringList: NO_SOLUTION
-      };
+      return NO_SOLUTION;
     }
 
 
@@ -182,25 +145,19 @@ export class WaterJugSolver {
 
       for (let state of nextStates) {
 
-        const parentNode = this.getUniqueStringOutOfState(current);
-        const node = this.getUniqueStringOutOfState(state);
-
-        const seen = this.tree.has(node);
+        const seen = this.tree.has(state.simple);
 
         if (!seen) {
-          this.addEdge(parentNode, node);
+          this.addEdge(current.simple, state.simple);
           this.buildPathForState(current, state);
           if (this.stateHasGoal(state)) {
-            return this.pathList.find((path) => path.stringList.at(-1) === node) as Path;
+            return this.pathList.find((path) => path.at(-1)?.simple === state.simple) as JugState[];
           }
           this.queue.push(state);
         }
 
       }
     }
-    return {
-      stringList: NO_SOLUTION
-    };
+    return NO_SOLUTION;
   }
-
 }

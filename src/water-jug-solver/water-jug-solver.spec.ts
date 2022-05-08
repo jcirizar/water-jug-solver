@@ -1,31 +1,33 @@
 import { WaterJugSolver } from './water-jug-solver';
 import { NO_SOLUTION } from '../constants';
+import { JugState } from './interfaces';
 
 describe('Water Jug Solver', () => {
   test('Solves for 3, 5, 4', () => {
     // expect(sum(1, 2)).toBe(3);
 
     const waterJugSolver = new WaterJugSolver(3, 5, 4);
-    const solution = waterJugSolver.solve();
+    const solution = <JugState[]>waterJugSolver.solve();
 
-    expect(solution.stringList).toStrictEqual(['0,0', '0,5', '3,2', '0,2', '2,0', '2,5', '3,4']);
+    expect(solution.map((v) => v.simple)).toStrictEqual(['0,0', '0,5', '3,2', '0,2', '2,0', '2,5', '3,4']);
 
   });
 
   test('Solves for 3, 5, 2', () => {
 
     const waterJugSolver = new WaterJugSolver(3, 5, 2);
-    const solution = waterJugSolver.solve();
+    const solution = <JugState[]>waterJugSolver.solve();
 
-    expect(solution.stringList).toStrictEqual(['0,0', '0,5', '3,2']);
+    expect(solution.map((v) => v.simple)).toStrictEqual(['0,0', '0,5', '3,2']);
 
   });
 
   test('Solves for 3, 100, 8, by ending with small jug with 3 and large with 5, making it 8', () => {
     const waterJugSolver = new WaterJugSolver(3, 100, 8);
-    const solution = waterJugSolver.solve();
+    const solution = <JugState[]>waterJugSolver.solve();
 
-    expect(solution.stringList).toStrictEqual([
+
+    expect(solution.map((v) => v.simple)).toStrictEqual([
       '0,0', '3,0', '0,3', '3,3', '0,6', '3,6',
       '0,9', '3,9', '0,12', '3,12', '0,15', '3,15',
       '0,18', '3,18', '0,21', '3,21', '0,24', '3,24',
@@ -47,18 +49,18 @@ describe('Water Jug Solver', () => {
   test('Fails for 3, 5, 10, reason 10>3+5', () => {
 
     const waterJugSolver = new WaterJugSolver(3, 5, 10);
-    const solution = waterJugSolver.solve();
+    const solution = <typeof NO_SOLUTION>waterJugSolver.solve();
 
-    expect(solution.stringList).toStrictEqual(NO_SOLUTION);
+    expect(solution).toStrictEqual(NO_SOLUTION);
 
   });
 
   test('Fails for 6, 20, 13, reason result can not be odd while jugs are even', () => {
 
     const waterJugSolver = new WaterJugSolver(6, 20, 13);
-    const solution = waterJugSolver.solve();
+    const solution = <typeof NO_SOLUTION>waterJugSolver.solve();
 
-    expect(solution.stringList).toStrictEqual(NO_SOLUTION);
+    expect(solution).toStrictEqual(NO_SOLUTION);
 
   });
 
