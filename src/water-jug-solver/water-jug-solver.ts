@@ -129,8 +129,6 @@ export class WaterJugSolver {
 
     while (this.queue.length) {
       const current = <JugState>this.queue.shift();
-      // console.log({path: this.path});
-      // const lastState = lastPath[lastPath.length - 1];
 
       const nextStates = [
         this.fillJug(current, 'small'),
@@ -160,8 +158,6 @@ export class WaterJugSolver {
 
       }
     }
-    console.log(this.pathList);
-    console.log(this.tree);
     return NO_SOLUTION;
   }
 
