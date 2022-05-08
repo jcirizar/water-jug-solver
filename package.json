@@ -1,6 +1,6 @@
 {
   "name": "@jcirizar/water-jug-solver",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Bucket problem solver",
   "main": "dist/index.js",
   "keywords": [
@@ -17,7 +17,7 @@
     "test": "jest",
     "build": "tsc",
     "cli": "ts-node ./src/cli/index.ts",
-    "prepublish": "tsc"
+    "prepublishOnly": "tsc"
   },
   "types": "dist/index.d.ts",
   "bin": {
