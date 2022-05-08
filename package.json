@@ -1,6 +1,6 @@
 {
   "name": "@jcirizar/water-jug-solver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bucket problem solver",
   "main": "dist/index.js",
   "keywords": ["water-jug-solver", "bfs", "algorithm", "cli"],
