@@ -150,10 +150,10 @@ export class WaterJugSolver {
         if (!seen) {
           this.addEdge(current.simple, state.simple);
           this.buildPathForState(current, state);
-          if (this.stateHasGoal(state)) {
-            return this.pathList.find((path) => path.at(-1)?.simple === state.simple) as JugState[];
-          }
           this.queue.push(state);
+        }
+        if (this.stateHasGoal(state)) {
+          return this.pathList.find((path) => path.at(-1)?.simple === state.simple) as JugState[];
         }
 
       }
